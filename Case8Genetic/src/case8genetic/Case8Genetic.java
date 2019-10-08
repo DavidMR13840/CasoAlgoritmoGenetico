@@ -16,6 +16,9 @@ public class Case8Genetic {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        
+        
+        ImageProcessor imageProcessor = new ImageProcessor();
     }
     
 }
