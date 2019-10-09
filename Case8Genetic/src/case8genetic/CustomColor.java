@@ -19,10 +19,10 @@ public class CustomColor {
     private int minBlue;
     private int maxBlue;
     private int colorNumber;
-            
+    private String name;
     private Color color;
 
-    public CustomColor(int minRed, int maxRed, int minGreen, int maxGreen, int minBlue, int maxBlue, Color color, int number) {
+    public CustomColor(int minRed, int maxRed, int minGreen, int maxGreen, int minBlue, int maxBlue, Color color, int number, String name) {
         this.minRed = minRed;
         this.maxRed = maxRed;
         this.minGreen = minGreen;
@@ -30,6 +30,7 @@ public class CustomColor {
         this.minBlue = minBlue;
         this.maxBlue = maxBlue;
         this.color = color;
+        this.name = name;
         this.colorNumber = number;
     }
     

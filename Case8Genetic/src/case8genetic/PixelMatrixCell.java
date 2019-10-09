@@ -13,6 +13,8 @@ import java.util.ArrayList;
  */
 public class PixelMatrixCell {
     private ArrayList<Pixel> samplesTaken;
+    private ArrayList<Pixel> currentSamples;
+    
     private int minimumX;
     private int minimumY;
     private int maximumX;
@@ -20,6 +22,7 @@ public class PixelMatrixCell {
 
     public PixelMatrixCell(int minimumX, int minimumY, int maximumX, int maximumY) {
         samplesTaken = new ArrayList<>();
+        currentSamples = new ArrayList<>();
         this.minimumX = minimumX;
         this.minimumY = minimumY;
         this.maximumX = maximumX;
@@ -27,9 +30,24 @@ public class PixelMatrixCell {
     }
 
     PixelMatrixCell() {
+        samplesTaken = new ArrayList<>();
+        currentSamples = new ArrayList<>();
+    }
+    
+    public void processCurrentSample(){
         
+        currentSamples.clear();
     }
 
+    public boolean addPixel(Pixel pixel){
+        if(samplesTaken.contains(pixel)){
+            return false;
+        }else{
+            samplesTaken.add(pixel);
+            currentSamples.add(pixel);
+            return true;
+        }
+    }
     
     public int getMinimumX() {
         return minimumX;
