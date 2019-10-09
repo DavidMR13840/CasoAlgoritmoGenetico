@@ -23,17 +23,16 @@ public class Case8Genetic {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        try {
+        
             // TODO code application logic here
             
-            File file = new File("C:\\Users\\David\\Pictures\\jokerGenetico.jpg");
-            BufferedImage image = ImageIO.read(file);
-            int p = image.getRGB(0, 0);
-            Color c = new Color(p);
+//            File file = new File("C:\\Users\\David\\Pictures\\jokerGenetico.jpg");
+//            BufferedImage image = ImageIO.read(file);
+//            int p = image.getRGB(0, 0);
+//            Color c = new Color(p);
             ImageProcessor imageProcessor = new ImageProcessor();
-        } catch (IOException ex) {
-            Logger.getLogger(Case8Genetic.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            imageProcessor.processImage("C:\\Users\\David\\Pictures\\jokerGenetico.jpg");
+       
     }
     
 }

@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 public class PixelMatrixCell {
     private ArrayList<Pixel> samplesTaken;
     private ArrayList<Pixel> currentSamples;
-    private final int PROBABILITY_REDUCTION_PORCENTAGE = 10;
+    private final double PROBABILITY_REDUCTION_PORCENTAGE = 0.10;
     private int minimumX;
     private int minimumY;
     private int maximumX;
@@ -52,13 +52,14 @@ public class PixelMatrixCell {
             }
         }
         if(samplesAllWhite){
-            cellSampleProbability = cellSampleProbability - ((cellSampleProbability*PROBABILITY_REDUCTION_PORCENTAGE)/100);
+            cellSampleProbability = cellSampleProbability - PROBABILITY_REDUCTION_PORCENTAGE;  //((cellSampleProbability*PROBABILITY_REDUCTION_PORCENTAGE)/100);
         }
         currentSamples.clear();
     }
 
     private boolean checkWhitePixel(int red, int blue, int green){
-        return (red == Color.WHITE.getRed()) && (blue == Color.WHITE.getBlue()) && (green == Color.WHITE.getGreen());
+        boolean pixelIsWhite = (red == 255) && (blue == 255) && (green == 255);
+        return  pixelIsWhite;
     }
     public boolean addPixel(Pixel pixel){
         if(samplesTaken.contains(pixel)){

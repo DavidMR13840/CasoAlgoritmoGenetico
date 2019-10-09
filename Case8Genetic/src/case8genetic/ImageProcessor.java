@@ -88,7 +88,7 @@ public class ImageProcessor {
             }
             evaluatedSamples = evaluatedSamples + SAMPLE_TAKEN_SIZE;
         }
-        
+        int p = 0;
     }
     
     public void analizeImageCell(BufferedImage imageToProcess, PixelMatrixCell matrixCell){
@@ -96,14 +96,22 @@ public class ImageProcessor {
         Random random = new Random();
         if(random.nextDouble() <= matrixCell.getCellSampleProbability()){
             while(analyzedSamples < SAMPLE_TAKEN_SIZE){
-                int currentX = random.nextInt(matrixCell.getMaximumX()-matrixCell.getMinimumX()) + matrixCell.getMaximumX();
-                int currentY = random.nextInt(matrixCell.getMaximumY()-matrixCell.getMinimumY()) + matrixCell.getMinimumY();
-                Color pixelColor = new Color(imageToProcess.getRGB(currentX, currentY));
-                Pixel newPixel = new Pixel(currentX, currentY,pixelColor.getRed(), pixelColor.getBlue(), pixelColor.getGreen());//comparar con la paleta
-
-                if(matrixCell.addPixel(newPixel)){
+                int currentX = random.nextInt(matrixCell.getMaximumX()-matrixCell.getMinimumX()) + matrixCell.getMinimumX();
+                    int currentY = random.nextInt(matrixCell.getMaximumY()-matrixCell.getMinimumY()) + matrixCell.getMinimumY();
+                try {
+                    
+                    Color pixelColor = new Color(imageToProcess.getRGB(currentX, currentY));
+                    Pixel newPixel = new Pixel(currentX, currentY,pixelColor.getRed(), pixelColor.getBlue(), pixelColor.getGreen());//comparar con la paleta
+                    if(matrixCell.addPixel(newPixel)){
                     analyzedSamples++;
                 }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println(currentX);
+                    System.out.println(currentY);
+                }
+                
+
+                
             }
             matrixCell.processCurrentSample();
         }
