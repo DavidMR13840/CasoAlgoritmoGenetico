@@ -23,8 +23,9 @@ public class ImageProcessor {
     private final int  IMAGE_CELL_SIZE =  102;
     private final int MATRIX_SIZE = 10;
     private final int TARGET_SAMPLE_SIZE = 4162;
-    private final int SAMPLE_TAKEN_SIZE = 208;
+    private final int SAMPLE_TAKEN_SIZE = 520;
     private PixelMatrixCell[][] pixelMatrixCells;
+    private ArrayList<CustomColor> colorPallete;
     
    
     public ImageProcessor(){
@@ -58,6 +59,11 @@ public class ImageProcessor {
         }
     }
     
+//    private void setColorPallete(){
+//        colorPallete = new ArrayList<>();
+//        colorPallete.add(new CustomColor(150, 255, 150, 255, MATRIX_SIZE, MATRIX_SIZE, Color.yellow, MATRIX_SIZE, name))
+//    }
+    
     private BufferedImage getBufferedImage(String imageLocation){
         BufferedImage imageToProcess = null;
         try {
@@ -70,28 +76,37 @@ public class ImageProcessor {
     
     public void processImage(String imageLocation){
         BufferedImage imageToProcess = getBufferedImage(imageLocation);
+        if(imageToProcess == null){
+            return;
+        }
         int evaluatedSamples = 0;
         while (evaluatedSamples < TARGET_SAMPLE_SIZE) {
             for(int row = 0; row < MATRIX_SIZE; row++){
                 for(int column = 0; column < MATRIX_SIZE;column++){
-                    
+                    analizeImageCell(imageToProcess, pixelMatrixCells[row][column]);
                 }
             }
-            
+            evaluatedSamples = evaluatedSamples + SAMPLE_TAKEN_SIZE;
         }
         
     }
     
-//    public void analizeImageCell(BufferedImage imageToProcess, int startingX, int startingY, int maxX, int maxY, int cellColumn, int cellRow){
-//        int analyzedSamples = 0;
-//        Random random = new Random();
-//        while(analyzedSamples < CELL_SAMPLE_SIZE){
-//            int currentX = random.nextInt(maxX-startingX) + startingX;
-//            int currentY = random.nextInt(maxY-startingY) + startingY;
-//            Color pixelColor = new Color(imageToProcess.getRGB(currentX, currentY));
-//            Pixel newPixel = new Pixel(currentX, currentY,pixelColor.getRed(), pixelColor.getBlue(), pixelColor.getGreen());//comparar con la paleta
-//            
-//            if(cellMatrix[cellRow][cellColumn])
-//        }
-//    }
+    public void analizeImageCell(BufferedImage imageToProcess, PixelMatrixCell matrixCell){
+        int analyzedSamples = 0;
+        Random random = new Random();
+        if(random.nextDouble() <= matrixCell.getCellSampleProbability()){
+            while(analyzedSamples < SAMPLE_TAKEN_SIZE){
+                int currentX = random.nextInt(matrixCell.getMaximumX()-matrixCell.getMinimumX()) + matrixCell.getMaximumX();
+                int currentY = random.nextInt(matrixCell.getMaximumY()-matrixCell.getMinimumY()) + matrixCell.getMinimumY();
+                Color pixelColor = new Color(imageToProcess.getRGB(currentX, currentY));
+                Pixel newPixel = new Pixel(currentX, currentY,pixelColor.getRed(), pixelColor.getBlue(), pixelColor.getGreen());//comparar con la paleta
+
+                if(matrixCell.addPixel(newPixel)){
+                    analyzedSamples++;
+                }
+            }
+            matrixCell.processCurrentSample();
+        }
+
+    }
 }

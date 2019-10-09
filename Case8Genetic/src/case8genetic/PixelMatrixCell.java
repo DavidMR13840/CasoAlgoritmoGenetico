@@ -6,6 +6,7 @@
 package case8genetic;
 
 import java.util.ArrayList;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -14,11 +15,12 @@ import java.util.ArrayList;
 public class PixelMatrixCell {
     private ArrayList<Pixel> samplesTaken;
     private ArrayList<Pixel> currentSamples;
-    
+    private final int PROBABILITY_REDUCTION_PORCENTAGE = 10;
     private int minimumX;
     private int minimumY;
     private int maximumX;
     private int maximumY;
+    private double cellSampleProbability;
 
     public PixelMatrixCell(int minimumX, int minimumY, int maximumX, int maximumY) {
         samplesTaken = new ArrayList<>();
@@ -27,18 +29,37 @@ public class PixelMatrixCell {
         this.minimumY = minimumY;
         this.maximumX = maximumX;
         this.maximumY = maximumY;
+        this.cellSampleProbability = 1;
     }
 
     PixelMatrixCell() {
         samplesTaken = new ArrayList<>();
         currentSamples = new ArrayList<>();
+        this.cellSampleProbability = 1;
+    }
+
+    public double getCellSampleProbability() {
+        return cellSampleProbability;
     }
     
+    
     public void processCurrentSample(){
-        
+        boolean samplesAllWhite = true;
+        for(Pixel pixel : currentSamples){
+            if(!checkWhitePixel(pixel.getRedValue(), pixel.getBlueValue(), pixel.getGreenValue())){
+                samplesAllWhite = false;
+                break;
+            }
+        }
+        if(samplesAllWhite){
+            cellSampleProbability = cellSampleProbability - ((cellSampleProbability*PROBABILITY_REDUCTION_PORCENTAGE)/100);
+        }
         currentSamples.clear();
     }
 
+    private boolean checkWhitePixel(int red, int blue, int green){
+        return (red == Color.WHITE.getRed()) && (blue == Color.WHITE.getBlue()) && (green == Color.WHITE.getGreen());
+    }
     public boolean addPixel(Pixel pixel){
         if(samplesTaken.contains(pixel)){
             return false;

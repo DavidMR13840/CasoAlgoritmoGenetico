@@ -15,6 +15,7 @@ public class Pixel {
     private int redValue;
     private int blueValue;
     private int greenValue;
+    private int colorNumber;
 
     public Pixel(int xValue, int yValue, int redValue, int blueValue, int greenValue) {
         this.xValue = xValue;
@@ -27,6 +28,28 @@ public class Pixel {
     public boolean equals(Pixel pixel) {
         return (this.xValue == pixel.xValue) && (this.yValue == pixel.yValue);
     }
+
+    public int getColorNumber() {
+        return colorNumber;
+    }
+
+    public void setColorNumber(int colorNumber) {
+        this.colorNumber = colorNumber;
+    }
+
+    public int getRedValue() {
+        return redValue;
+    }
+
+    public int getBlueValue() {
+        return blueValue;
+    }
+
+    public int getGreenValue() {
+        return greenValue;
+    }
+    
+    
     
     
 

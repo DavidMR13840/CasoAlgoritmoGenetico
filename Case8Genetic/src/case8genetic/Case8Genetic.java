@@ -5,6 +5,14 @@
  */
 package case8genetic;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+
 /**
  *
  * @author David
@@ -15,10 +23,17 @@ public class Case8Genetic {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-        
-        
-        ImageProcessor imageProcessor = new ImageProcessor();
+        try {
+            // TODO code application logic here
+            
+            File file = new File("C:\\Users\\David\\Pictures\\jokerGenetico.jpg");
+            BufferedImage image = ImageIO.read(file);
+            int p = image.getRGB(0, 0);
+            Color c = new Color(p);
+            ImageProcessor imageProcessor = new ImageProcessor();
+        } catch (IOException ex) {
+            Logger.getLogger(Case8Genetic.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
