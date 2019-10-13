@@ -6,7 +6,7 @@
 package case8genetic;
 
 import java.util.ArrayList;
-import javafx.scene.paint.Color;
+import java.util.Collections;
 
 /**
  *
@@ -55,6 +55,10 @@ public class PixelMatrixCell {
             cellSampleProbability = cellSampleProbability - PROBABILITY_REDUCTION_PORCENTAGE;  //((cellSampleProbability*PROBABILITY_REDUCTION_PORCENTAGE)/100);
         }
         currentSamples.clear();
+    }
+    
+    public void sortSampleList(){
+        Collections.sort(samplesTaken, new CustomPixelColorComparator());
     }
 
     private boolean checkWhitePixel(int red, int blue, int green){

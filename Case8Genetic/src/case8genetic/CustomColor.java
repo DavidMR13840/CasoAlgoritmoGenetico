@@ -13,14 +13,27 @@ import java.awt.Color;
  */
 public class CustomColor {
     
-    private Color color;
-    private int colorNumber;
+    private final Color color;
+    private final int colorNumber;
 
     public CustomColor( Color color, int number) {
         
         this.color = color;
         this.colorNumber = number;
     }
+    
+    public int compareDistance(int red, int green, int blue){
+        return Math.abs(red - this.color.getRed()) + Math.abs(green - this.color.getGreen()) + Math.abs(blue - this.color.getBlue());
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public int getColorNumber() {
+        return colorNumber;
+    }
+    
     
     
     
