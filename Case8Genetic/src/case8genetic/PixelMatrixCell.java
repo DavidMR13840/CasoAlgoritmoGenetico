@@ -7,6 +7,9 @@ package case8genetic;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -21,6 +24,7 @@ public class PixelMatrixCell {
     private int maximumX;
     private int maximumY;
     private double cellSampleProbability;
+    private Map<Integer, List<Pixel>> pixelColorGroups;
 
     public PixelMatrixCell(int minimumX, int minimumY, int maximumX, int maximumY) {
         samplesTaken = new ArrayList<>();
@@ -30,16 +34,30 @@ public class PixelMatrixCell {
         this.maximumX = maximumX;
         this.maximumY = maximumY;
         this.cellSampleProbability = 1;
+        this.pixelColorGroups = new HashMap<>();
     }
 
     PixelMatrixCell() {
         samplesTaken = new ArrayList<>();
         currentSamples = new ArrayList<>();
         this.cellSampleProbability = 1;
+        this.pixelColorGroups = new HashMap<>();
     }
 
     public double getCellSampleProbability() {
         return cellSampleProbability;
+    }
+    
+    public void  formPixelGroups(){
+        samplesTaken.forEach((pixel) -> {
+            List<Pixel> tempList = pixelColorGroups.get(pixel.getColorNumber());
+            
+            if(tempList == null){
+                tempList = new ArrayList<>();
+                pixelColorGroups.put(pixel.getColorNumber(), tempList);
+            }
+            tempList.add(pixel);
+        });
     }
     
     
@@ -57,10 +75,13 @@ public class PixelMatrixCell {
         currentSamples.clear();
     }
     
-    public void sortSampleList(){
-        Collections.sort(samplesTaken, new CustomPixelColorComparator());
-    }
+//    public void sortSampleList(){
+//        //No es necesario hacer un sorting ya que generamos los grupos con un hashmap
+//        //Collections.sort(samplesTaken, new CustomPixelColorComparator());
+//        
+//    }
 
+    
     private boolean checkWhitePixel(int red, int blue, int green){
         boolean pixelIsWhite = (red == 255) && (blue == 255) && (green == 255);
         return  pixelIsWhite;
@@ -105,6 +126,19 @@ public class PixelMatrixCell {
 
     public void setMaximumY(int maximumY) {
         this.maximumY = maximumY;
+    }
+
+    public int getSamplesTaken() {
+        return samplesTaken.size() - getWhiteSamples();
+    }
+    
+    private int getWhiteSamples(){
+        Long whitePixels =  samplesTaken.stream().filter(pixel -> 0 == pixel.getColorNumber()).count();
+        return whitePixels.intValue();
+    }
+
+    public Map<Integer, List<Pixel>> getPixelColorGroups() {
+        return pixelColorGroups;
     }
     
     

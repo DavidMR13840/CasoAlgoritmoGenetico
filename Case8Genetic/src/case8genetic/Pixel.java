@@ -48,6 +48,16 @@ public class Pixel {
     public int getGreenValue() {
         return greenValue;
     }
+
+    public int getxValue() {
+        return xValue;
+    }
+
+    public int getyValue() {
+        return yValue;
+    }
+    
+    
     
     
     

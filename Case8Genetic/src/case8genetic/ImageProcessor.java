@@ -26,12 +26,13 @@ public class ImageProcessor {
     private final int SAMPLE_TAKEN_SIZE = 520;
     private PixelMatrixCell[][] pixelMatrixCells;
     private ArrayList<CustomColor> colorPallete;
-    
+    private ArrayList<PixelArea> pixelAreas;
    
     public ImageProcessor(){
         
         setPixelMatrix();
         setColorPallete();
+        this.pixelAreas = new ArrayList<>();
         System.out.println("case8genetic.ImageProcessor.<init>()");
         
     }
@@ -70,6 +71,7 @@ public class ImageProcessor {
         colorPallete.add(new CustomColor(Color.CYAN, 6));
         colorPallete.add(new CustomColor(Color.ORANGE, 7));
         colorPallete.add(new CustomColor(Color.MAGENTA, 8));
+        colorPallete.add(new CustomColor(Color.GRAY, 9));
         colorPallete.add(new CustomColor(Color.WHITE, 0));
     }
     
@@ -97,8 +99,9 @@ public class ImageProcessor {
             }
             evaluatedSamples = evaluatedSamples + SAMPLE_TAKEN_SIZE;
         }
-        //solo para debugging
-        int p = 0;
+        sortSectorsByColor();
+        
+       
     }
     
     public void analizeImageCell(BufferedImage imageToProcess, PixelMatrixCell matrixCell){
@@ -129,10 +132,26 @@ public class ImageProcessor {
 
     }
     
-    public void sortSectorsByColor(){
+    private int getSamplesTotal(){
+        int totalSamples = 0;
         for(int row = 0; row < MATRIX_SIZE; row++){
                 for(int column = 0; column < MATRIX_SIZE;column++){
-                    pixelMatrixCells[row][column].sortSampleList();
+                   totalSamples += pixelMatrixCells[row][column].getSamplesTaken();
+                }
+            }
+        return totalSamples;
+    }
+    
+    private void sortSectorsByColor(){
+        int totalSamples = getSamplesTotal();
+        for(int row = 0; row < MATRIX_SIZE; row++){
+                for(int column = 0; column < MATRIX_SIZE;column++){
+                    pixelMatrixCells[row][column].formPixelGroups();
+                    for(int colorNumber = 1; colorNumber < colorPallete.size(); colorNumber++ ){
+                        if(pixelMatrixCells[row][column].getPixelColorGroups().get(colorNumber) != null){
+                            pixelAreas.add(new PixelArea(colorNumber, pixelMatrixCells[row][column].getPixelColorGroups().get(colorNumber),totalSamples));
+                        }
+                    }
                 }
             }
     }
