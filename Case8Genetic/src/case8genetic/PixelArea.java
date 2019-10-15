@@ -25,7 +25,7 @@ public class PixelArea {
     }
     
     private void setPorcentage(int totalPixelSamples){
-        this.porcentage = (groupSize*100)/totalPixelSamples;
+        this.porcentage = (groupSize*100.0)/totalPixelSamples;
     }
 
     private void setRanges(List<Pixel> pixelColorGroup) {

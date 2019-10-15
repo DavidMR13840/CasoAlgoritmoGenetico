@@ -132,6 +132,12 @@ public class PixelMatrixCell {
         return samplesTaken.size() - getWhiteSamples();
     }
     
+    public int getCellSamples(){
+        Long pixels = samplesTaken.stream().filter(pixel -> pixel.getColorNumber() != 0).count();
+        int returnVal = pixels.intValue();
+        return returnVal;
+    }
+    
     private int getWhiteSamples(){
         Long whitePixels =  samplesTaken.stream().filter(pixel -> 0 == pixel.getColorNumber()).count();
         return whitePixels.intValue();

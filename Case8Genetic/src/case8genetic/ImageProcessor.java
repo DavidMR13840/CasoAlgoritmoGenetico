@@ -136,7 +136,7 @@ public class ImageProcessor {
         int totalSamples = 0;
         for(int row = 0; row < MATRIX_SIZE; row++){
                 for(int column = 0; column < MATRIX_SIZE;column++){
-                   totalSamples += pixelMatrixCells[row][column].getSamplesTaken();
+                   totalSamples += pixelMatrixCells[row][column].getCellSamples();
                 }
             }
         return totalSamples;
