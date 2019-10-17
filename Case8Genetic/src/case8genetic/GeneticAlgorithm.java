@@ -20,6 +20,7 @@ public class GeneticAlgorithm {
     private ArrayList<Polygon> population;
     private TreeMap<Integer,Integer> genomeMap;
     private int GENOME_NUMBER = 65535;
+    private double MUTATION_PERCENTAGE = 0.05;
 
     public GeneticAlgorithm(ArrayList<PixelArea> objectiveList, ArrayList<CustomColor> customColors) {
         this.objectiveList = objectiveList;
@@ -115,9 +116,18 @@ public class GeneticAlgorithm {
     private void mixPolygons(ArrayList<Polygon> polygons){
         ArrayList<Polygon> finalPopulation = new ArrayList<>();
         Random random = new Random();
-        Polygon firstParent = polygons.remove(random.nextInt((polygons.size()-0))+0);
-        Polygon secondParent = polygons.remove(random.nextInt((polygons.size()-0))+0);
-        
+        while(polygons.size() >= 2){
+            Polygon firstParent = polygons.remove(random.nextInt((polygons.size()-0))+0);
+            Polygon secondParent = polygons.remove(random.nextInt((polygons.size()-0))+0);
+            int childGenome = mixGenomes(firstParent.getGenomeNumber(), secondParent.getGenomeNumber());
+            finalPopulation.add(createPolygon(childGenome));
+            finalPopulation.add(firstParent);
+            finalPopulation.add(secondParent);
+        }
+        if(polygons.size() == 1){
+            finalPopulation.add(polygons.remove(0));
+        }
+        population = finalPopulation;
         
     }
     
@@ -127,6 +137,12 @@ public class GeneticAlgorithm {
         Random random = new Random();
         int point = random.nextInt((16));
         String newGenome = firstGenomeBits.substring(0,point-1) + secondGenomeBits.substring(point);
+        if(random.nextDouble() <= MUTATION_PERCENTAGE){
+            int bitLocation = random.nextInt(16);
+            if(newGenome.charAt(bitLocation) == '1' ){
+                newGenome = newGenome.substring(0, bitLocation-1) + "0" + newGenome.substring(bitLocation+1);
+            }
+        }
         int childGenome = Integer.valueOf(newGenome, 2);
         return  childGenome;
     }

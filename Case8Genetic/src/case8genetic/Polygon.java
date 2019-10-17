@@ -23,38 +23,9 @@ public class Polygon {
         this.genomeNumber = genomeNumber;
     }
 
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Polygon other = (Polygon) obj;
-        if (this.firstX != other.firstX) {
-            return false;
-        }
-        if (this.firstY != other.firstY) {
-            return false;
-        }
-        if (this.secondX != other.secondX) {
-            return false;
-        }
-        if (this.secondY != other.secondY) {
-            return false;
-        }
-        if (this.colorGroupNumber != other.colorGroupNumber) {
-            return false;
-        }
-        if (this.genomeNumber != other.genomeNumber) {
-            return false;
-        }
-        return true;
+    public boolean equals(Polygon obj) {
+        return obj.colorGroupNumber == this.colorGroupNumber && obj.firstX == this.firstX && obj.secondX == this.secondX
+                && obj.genomeNumber == this.genomeNumber && obj.firstY == this.firstY && obj.secondY == this.secondY;
     }
 
     
