@@ -140,7 +140,7 @@ public class ImageProcessor {
 
     }
     
-    private int getSamplesTotal(){
+    public int getSamplesTotal(){
         int totalSamples = 0;
         for(int row = 0; row < MATRIX_SIZE; row++){
                 for(int column = 0; column < MATRIX_SIZE;column++){

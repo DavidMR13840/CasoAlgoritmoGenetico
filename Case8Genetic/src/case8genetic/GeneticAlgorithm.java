@@ -76,8 +76,83 @@ public class GeneticAlgorithm {
         population.add(polygon);
     }
     
+    private Polygon createPolygon(int genomeNumber){
+        int genomeIndex = getGenomeArea(genomeNumber);
+        PixelArea area = objectiveList.get(genomeIndex);
+        Random random = new Random();
+        int firstX = random.nextInt((area.getMaximumX()-area.getMinimumX())+1) + area.getMinimumX();
+        int secondX = random.nextInt((area.getMaximumX()-area.getMinimumX())+1) + area.getMinimumX();
+        int firstY = random.nextInt((area.getMaximumY()-area.getMinimumY())+1) + area.getMinimumY();
+        int secondY = random.nextInt((area.getMaximumY()-area.getMinimumY())+1) + area.getMinimumY();
+        Polygon polygon = new Polygon(firstX, firstY, secondX, secondY, area.getColorGroupNumber(), genomeNumber);
+        return polygon;
+    }
+    
     public void runAlgorithm(){
         createInitialPopulation(20);
+        ArrayList<Polygon> newPopulation = new ArrayList<>();
+        for(int actualPolygon = 0; actualPolygon < population.size(); actualPolygon++){
+            if (fitnessFunction(population.get(actualPolygon))) {
+                newPopulation.add(population.get(actualPolygon));
+            }
+        }
+        mixPolygons(newPopulation);
+    }
+    
+    private boolean fitnessFunction(Polygon polygon){
+        double totalTypePercentage = getTotalTypePercentage(polygon);
+        double TypePercentageWithoutPolygon = getTypePercentage(polygon);
+        double typeObjectivePercentage = objectiveList.get(getGenomeArea(polygon.getGenomeNumber())).getPorcentage();
+        double percentageValue = (TypePercentageWithoutPolygon/totalTypePercentage)* typeObjectivePercentage;
+        if(percentageValue > 0.95*typeObjectivePercentage){
+            return  true;
+        }
+        else{
+            return false;
+        }
+    }
+    
+    private void mixPolygons(ArrayList<Polygon> polygons){
+        ArrayList<Polygon> finalPopulation = new ArrayList<>();
+        Random random = new Random();
+        Polygon firstParent = polygons.remove(random.nextInt((polygons.size()-0))+0);
+        Polygon secondParent = polygons.remove(random.nextInt((polygons.size()-0))+0);
+        
+        
+    }
+    
+    private int mixGenomes(int firstGenome, int secondGenome){
+        String firstGenomeBits = Integer.toBinaryString(firstGenome);
+        String secondGenomeBits = Integer.toBinaryString(secondGenome);
+        Random random = new Random();
+        int point = random.nextInt((16));
+        String newGenome = firstGenomeBits.substring(0,point-1) + secondGenomeBits.substring(point);
+        int childGenome = Integer.valueOf(newGenome, 2);
+        return  childGenome;
+    }
+    
+    private double getTotalTypePercentage(Polygon polygon){
+        int polygonTypeNumber = 0;
+        for(Polygon p : population){
+            if(getGenomeArea(p.getGenomeNumber()) == getGenomeArea(polygon.getGenomeNumber())){
+                polygonTypeNumber++;
+            }
+        }
+        double percentage = (polygonTypeNumber*100.0)/population.size();
+        return  percentage;
+    }
+    
+        private double getTypePercentage(Polygon polygon){
+        int polygonTypeNumber = 0;
+        for(Polygon p : population){
+            if (!p.equals(polygon)) {
+                 if(getGenomeArea(p.getGenomeNumber()) == getGenomeArea(polygon.getGenomeNumber())){
+                polygonTypeNumber++;
+            }
+            }
+        }
+        double percentage = (polygonTypeNumber*100.0)/population.size();
+        return  percentage;
     }
     
 }

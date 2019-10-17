@@ -33,6 +33,8 @@ public class Case8Genetic {
             ImageProcessor imageProcessor = new ImageProcessor();
             imageProcessor.processImage("C:\\Users\\David\\Pictures\\jokerGenetico.jpg");
             GeneticAlgorithm algorithm = new GeneticAlgorithm(imageProcessor.getPixelAreas(), imageProcessor.getColorPallete());
+            int totalSamples = imageProcessor.getSamplesTotal();
+            int maxNumberPolygons = (totalSamples*60)/100;
             algorithm.runAlgorithm();
             
        
