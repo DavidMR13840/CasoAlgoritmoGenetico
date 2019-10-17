@@ -32,6 +32,8 @@ public class Case8Genetic {
 //            Color c = new Color(p);
             ImageProcessor imageProcessor = new ImageProcessor();
             imageProcessor.processImage("C:\\Users\\David\\Pictures\\jokerGenetico.jpg");
+            GeneticAlgorithm algorithm = new GeneticAlgorithm(imageProcessor.getPixelAreas(), imageProcessor.getColorPallete());
+            algorithm.runAlgorithm();
             
        
     }

@@ -103,6 +103,14 @@ public class ImageProcessor {
         
        
     }
+
+    public ArrayList<CustomColor> getColorPallete() {
+        return colorPallete;
+    }
+
+    public ArrayList<PixelArea> getPixelAreas() {
+        return pixelAreas;
+    }
     
     public void analizeImageCell(BufferedImage imageToProcess, PixelMatrixCell matrixCell){
         int analyzedSamples = 0;

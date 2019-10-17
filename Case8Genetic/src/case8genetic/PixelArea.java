@@ -23,6 +23,30 @@ public class PixelArea {
         setRanges(pixelColorGroup);
         setPorcentage(totalPixelSamples);
     }
+
+    public int getMinimumX() {
+        return minimumX;
+    }
+
+    public int getMinimumY() {
+        return minimumY;
+    }
+
+    public int getMaximumX() {
+        return maximumX;
+    }
+
+    public int getMaximumY() {
+        return maximumY;
+    }
+
+    public int getColorGroupNumber() {
+        return colorGroupNumber;
+    }
+
+    public double getPorcentage() {
+        return porcentage;
+    }
     
     private void setPorcentage(int totalPixelSamples){
         this.porcentage = (groupSize*100.0)/totalPixelSamples;
