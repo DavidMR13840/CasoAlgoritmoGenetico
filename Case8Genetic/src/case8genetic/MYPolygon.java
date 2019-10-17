@@ -9,12 +9,12 @@ package case8genetic;
  *
  * @author David
  */
-public class Polygon {
+public class MYPolygon {
     private int firstX, firstY, secondX, secondY;
     private int colorGroupNumber;
     private int genomeNumber;
 
-    public Polygon(int firstX, int firstY, int secondX, int secondY, int colorGroupNumber, int genomeNumber) {
+    public MYPolygon(int firstX, int firstY, int secondX, int secondY, int colorGroupNumber, int genomeNumber) {
         this.firstX = firstX;
         this.firstY = firstY;
         this.secondX = secondX;
@@ -23,7 +23,7 @@ public class Polygon {
         this.genomeNumber = genomeNumber;
     }
 
-    public boolean equals(Polygon obj) {
+    public boolean equals(MYPolygon obj) {
         return obj.colorGroupNumber == this.colorGroupNumber && obj.firstX == this.firstX && obj.secondX == this.secondX
                 && obj.genomeNumber == this.genomeNumber && obj.firstY == this.firstY && obj.secondY == this.secondY;
     }
