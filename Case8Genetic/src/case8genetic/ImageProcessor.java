@@ -64,7 +64,7 @@ public class ImageProcessor {
     private void setColorPallete(){
         colorPallete = new ArrayList<>();
         colorPallete.add(new CustomColor(Color.RED, 1));
-        colorPallete.add(new CustomColor(Color.blue, 2));
+        colorPallete.add(new CustomColor(Color.BLUE, 2));
         colorPallete.add(new CustomColor(Color.GREEN, 3));
         colorPallete.add(new CustomColor(Color.YELLOW, 4));
         colorPallete.add(new CustomColor(Color.BLACK, 5));

@@ -39,6 +39,7 @@ public class GeneticAlgorithm {
     private TreeMap<Integer,Integer> genomeMap;
     private int GENOME_NUMBER = 65535;
     private double MUTATION_PERCENTAGE = 0.05;
+    private int amountChildsTGenerate;
 
     public GeneticAlgorithm(ArrayList<PixelArea> objectiveList, ArrayList<CustomColor> customColors) {
         this.objectiveList = objectiveList;
@@ -46,6 +47,7 @@ public class GeneticAlgorithm {
         this.population = new ArrayList<>();
         this.genomeMap = new TreeMap<>();
         setGenomes();
+        amountChildsTGenerate = 10;
     }
     
     private void setGenomes(){
@@ -55,7 +57,12 @@ public class GeneticAlgorithm {
             PixelArea area = objectiveList.get(objectiveIndex);
             int areaGenomes = (int) (GENOME_NUMBER * area.getPorcentage())/100;
             genomeMap.put(currentGenome, objectiveIndex);
-            genomeMap.put((currentGenome +areaGenomes)-1, null);
+            if(objectiveIndex == objectiveList.size() -1){
+                genomeMap.put(65535, null);
+            }else{
+                genomeMap.put((currentGenome +areaGenomes)-1, null);
+            }
+            
             currentGenome += areaGenomes;
             objectiveIndex++; 
         }
@@ -69,7 +76,16 @@ public class GeneticAlgorithm {
         if(mapEntry == null){
             return -1;
         }else{
-            return mapEntry.getValue();
+            while (mapEntry.getValue() == null) {
+                    mapEntry = genomeMap.lowerEntry(genomeKey);
+            }
+            try {
+                return mapEntry.getValue();
+            } catch (Exception e) {
+                System.out.println(genomeKey);
+                return  -1;
+            }
+            
         }
         
     }
@@ -121,7 +137,7 @@ public class GeneticAlgorithm {
         while(population.size() < size){
             ArrayList<MYPolygon> newPopulation = new ArrayList<>();
         for(int actualPolygon = 0; actualPolygon < population.size(); actualPolygon++){
-            if (fitnessFunction(population.get(actualPolygon))) {
+            if (!fitnessFunction(population.get(actualPolygon))) {
                 newPopulation.add(population.get(actualPolygon));
             }
         }
@@ -146,8 +162,12 @@ public class GeneticAlgorithm {
     private void drawPolygons(SVGGraphics2D graphics2D,String fileName){
         for(MYPolygon polygon : population){
             graphics2D.setColor(getColor(polygon.getColorGroupNumber()));
-            graphics2D.drawPolygon(new Polygon(new int[]{polygon.getFirstX(),polygon.getSecondX(),polygon.getFirstX(),polygon.getSecondX()},
-                                                new int[]{polygon.getFirstY(),polygon.getFirstY(),polygon.getSecondY(),polygon.getSecondY()},4));
+            Polygon canvasPolygon =  new Polygon(new int[]{polygon.getFirstX(),polygon.getSecondX(),polygon.getSecondX(),polygon.getFirstX()},
+                                                new int[]{polygon.getFirstY(),polygon.getFirstY(),polygon.getSecondY(),polygon.getSecondY()},4);
+            
+            graphics2D.fillPolygon(canvasPolygon);
+            graphics2D.drawPolygon(canvasPolygon);
+            
         }
         boolean useCSS = true;
         
@@ -184,34 +204,54 @@ public class GeneticAlgorithm {
     private void mixPolygons(ArrayList<MYPolygon> polygons){
         ArrayList<MYPolygon> finalPopulation = new ArrayList<>();
         Random random = new Random();
-        while(polygons.size() >= 2){
-            MYPolygon firstParent = polygons.remove(random.nextInt((polygons.size()-0))+0);
-            MYPolygon secondParent = polygons.remove(random.nextInt((polygons.size()-0))+0);
+        int childsGenerated = 0;
+        while(childsGenerated < amountChildsTGenerate){
+            MYPolygon firstParent = polygons.get(random.nextInt((polygons.size()-0))+0);
+            MYPolygon secondParent = polygons.get(random.nextInt((polygons.size()-0))+0);
             int childGenome = mixGenomes(firstParent.getGenomeNumber(), secondParent.getGenomeNumber());
             finalPopulation.add(createPolygon(childGenome));
-            finalPopulation.add(firstParent);
-            finalPopulation.add(secondParent);
+            childsGenerated++;
         }
-        if(polygons.size() == 1){
-            finalPopulation.add(polygons.remove(0));
-        }
-        population = finalPopulation;
+        amountChildsTGenerate = amountChildsTGenerate*2;
+        polygons.addAll(finalPopulation);
+        population = polygons;
+     
         
     }
     
     private int mixGenomes(int firstGenome, int secondGenome){
-        String firstGenomeBits = Integer.toBinaryString(firstGenome);
-        String secondGenomeBits = Integer.toBinaryString(secondGenome);
+        String firstGenomeBits =  String.format("%16s", Integer.toBinaryString(firstGenome)).replace(' ', '0') ;
+        String secondGenomeBits = String.format("%16s", Integer.toBinaryString(secondGenome)).replace(' ', '0') ;
         Random random = new Random();
         int point = random.nextInt((16));
-        String newGenome = firstGenomeBits.substring(0,point-1) + secondGenomeBits.substring(point);
+        String newGenome = firstGenomeBits.substring(0,point) + secondGenomeBits.substring(point);
+        
+        
         if(random.nextDouble() <= MUTATION_PERCENTAGE){
             int bitLocation = random.nextInt(16);
             if(newGenome.charAt(bitLocation) == '1' ){
-                newGenome = newGenome.substring(0, bitLocation-1) + "0" + newGenome.substring(bitLocation+1);
+                if(bitLocation == 0){
+                    newGenome = "0" + newGenome.substring(1);
+                }else if(bitLocation == 15){
+                    
+                        newGenome = newGenome.substring(0, bitLocation) + "0";
+                    
+                }else{
+                        newGenome = newGenome.substring(0, bitLocation) + "0" + newGenome.substring(bitLocation+1);
+                     }
+            }else if(newGenome.charAt(bitLocation) == '0' ){
+                if(bitLocation == 0){
+                    newGenome = "1" + newGenome.substring(1);
+                }else if(bitLocation == 15){   
+                        newGenome = newGenome.substring(0, bitLocation) + "1";
+                    
+                }else{
+                        newGenome = newGenome.substring(0, bitLocation) + "1" + newGenome.substring(bitLocation+1);
+                     }
             }
         }
         int childGenome = Integer.valueOf(newGenome, 2);
+
         return  childGenome;
     }
     
