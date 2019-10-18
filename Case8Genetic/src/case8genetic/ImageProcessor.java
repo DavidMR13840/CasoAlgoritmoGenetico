@@ -26,11 +26,13 @@ public class ImageProcessor {
     private final int SAMPLE_TAKEN_SIZE = 520;
     private PixelMatrixCell[][] pixelMatrixCells;
     private ArrayList<CustomColor> colorPallete;
-    
+    private ArrayList<PixelArea> pixelAreas;
    
     public ImageProcessor(){
         
         setPixelMatrix();
+        setColorPallete();
+        this.pixelAreas = new ArrayList<>();
         System.out.println("case8genetic.ImageProcessor.<init>()");
         
     }
@@ -59,10 +61,19 @@ public class ImageProcessor {
         }
     }
     
-//    private void setColorPallete(){
-//        colorPallete = new ArrayList<>();
-//        colorPallete.add(new CustomColor(150, 255, 150, 255, MATRIX_SIZE, MATRIX_SIZE, Color.yellow, MATRIX_SIZE, name))
-//    }
+    private void setColorPallete(){
+        colorPallete = new ArrayList<>();
+        colorPallete.add(new CustomColor(Color.RED, 1));
+        colorPallete.add(new CustomColor(Color.BLUE, 2));
+        colorPallete.add(new CustomColor(Color.GREEN, 3));
+        colorPallete.add(new CustomColor(Color.YELLOW, 4));
+        colorPallete.add(new CustomColor(Color.BLACK, 5));
+        colorPallete.add(new CustomColor(Color.CYAN, 6));
+        colorPallete.add(new CustomColor(Color.ORANGE, 7));
+        colorPallete.add(new CustomColor(Color.MAGENTA, 8));
+        colorPallete.add(new CustomColor(Color.GRAY, 9));
+        colorPallete.add(new CustomColor(Color.WHITE, 0));
+    }
     
     private BufferedImage getBufferedImage(String imageLocation){
         BufferedImage imageToProcess = null;
@@ -88,7 +99,17 @@ public class ImageProcessor {
             }
             evaluatedSamples = evaluatedSamples + SAMPLE_TAKEN_SIZE;
         }
-        int p = 0;
+        sortSectorsByColor();
+        
+       
+    }
+
+    public ArrayList<CustomColor> getColorPallete() {
+        return colorPallete;
+    }
+
+    public ArrayList<PixelArea> getPixelAreas() {
+        return pixelAreas;
     }
     
     public void analizeImageCell(BufferedImage imageToProcess, PixelMatrixCell matrixCell){
@@ -102,6 +123,7 @@ public class ImageProcessor {
                     
                     Color pixelColor = new Color(imageToProcess.getRGB(currentX, currentY));
                     Pixel newPixel = new Pixel(currentX, currentY,pixelColor.getRed(), pixelColor.getBlue(), pixelColor.getGreen());//comparar con la paleta
+                    setPixelColorGroup(newPixel);
                     if(matrixCell.addPixel(newPixel)){
                     analyzedSamples++;
                 }
@@ -116,5 +138,47 @@ public class ImageProcessor {
             matrixCell.processCurrentSample();
         }
 
+    }
+    
+    public int getSamplesTotal(){
+        int totalSamples = 0;
+        for(int row = 0; row < MATRIX_SIZE; row++){
+                for(int column = 0; column < MATRIX_SIZE;column++){
+                   totalSamples += pixelMatrixCells[row][column].getCellSamples();
+                }
+            }
+        return totalSamples;
+    }
+    
+    private void sortSectorsByColor(){
+        int totalSamples = getSamplesTotal();
+        for(int row = 0; row < MATRIX_SIZE; row++){
+                for(int column = 0; column < MATRIX_SIZE;column++){
+                    pixelMatrixCells[row][column].formPixelGroups();
+                    for(int colorNumber = 1; colorNumber < colorPallete.size(); colorNumber++ ){
+                        if(pixelMatrixCells[row][column].getPixelColorGroups().get(colorNumber) != null){
+                            pixelAreas.add(new PixelArea(colorNumber, pixelMatrixCells[row][column].getPixelColorGroups().get(colorNumber),totalSamples));
+                        }
+                    }
+                }
+            }
+    }
+    
+    private void setPixelColorGroup(Pixel pixel){
+        int rgbDistance = -1;
+        int colorGroup = 0;
+        for(CustomColor color : colorPallete){
+            if(rgbDistance < 0){
+                colorGroup = color.getColorNumber();
+                rgbDistance = color.compareDistance(pixel.getRedValue(), pixel.getGreenValue(), pixel.getBlueValue());
+            }else{
+                int newDistance = color.compareDistance(pixel.getRedValue(), pixel.getGreenValue(), pixel.getBlueValue());
+                if(newDistance < rgbDistance){
+                    colorGroup = color.getColorNumber();
+                    rgbDistance = newDistance;
+                }
+            }
+        }
+        pixel.setColorNumber(colorGroup);
     }
 }

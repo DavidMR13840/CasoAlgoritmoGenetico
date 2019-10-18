@@ -31,7 +31,12 @@ public class Case8Genetic {
 //            int p = image.getRGB(0, 0);
 //            Color c = new Color(p);
             ImageProcessor imageProcessor = new ImageProcessor();
-            imageProcessor.processImage("C:\\Users\\David\\Pictures\\jokerGenetico.jpg");
+            imageProcessor.processImage("C:\\Users\\David\\Pictures\\guacamaya.jpg");
+            GeneticAlgorithm algorithm = new GeneticAlgorithm(imageProcessor.getPixelAreas(), imageProcessor.getColorPallete());
+            int totalSamples = imageProcessor.getSamplesTotal();
+            int maxNumberPolygons = (totalSamples*60)/100;
+            algorithm.runAlgorithm(100000,"guacamaya");
+            System.out.println("case8genetic.Case8Genetic.main()");
        
     }
     
